@@ -27,3 +27,12 @@ def get_user_type(user_id):
     c.execute(user_type_select, test)
     rows = c.fetchone()
     return rows['user_type']
+
+
+def insert_message(name, email, message):
+    if not name:
+        name = ''
+    message_insert = "INSERT INTO messages (name, email, message, read) VALUES (?, ?, ?, ?)"
+    test = (name, email, message, 0)
+    c.execute(message_insert, test)
+    conn.commit()

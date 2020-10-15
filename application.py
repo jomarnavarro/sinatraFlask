@@ -126,6 +126,28 @@ def register():
 @app.route("/about")
 def about():
     return render_template('about.html')
+
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    if request.method == 'GET':
+        return render_template('contact.html')
+    else:
+        # do the magic of processing the contact form and add it to the database.
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        if not email:
+            return apology('You need to enter an email', 402)
+        if not message:
+            return apology('You need to enter a message', 402)
+
+        db_helpers.insert_message(name, email, message)
+
+        return redirect('/')
+
+
+
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
