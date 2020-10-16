@@ -36,3 +36,30 @@ def insert_message(name, email, message):
     test = (name, email, message, 0)
     c.execute(message_insert, test)
     conn.commit()
+
+
+def fetch_songs():
+    songs_join = "SELECT s.id, s.title, a.name, a.img_url FROM songs s JOIN artist a ON s.artist_id = a.id LIMIT 10;"
+    test = ()
+    c.execute(songs_join, test)
+    return c.fetchall()
+
+def fetch_song_info(n):
+    song_join = "SELECT s.id, s.title, s.duration, s.lyrics, s.num_likes, a.name, a.nationality, a.img_url FROM songs s JOIN artist a ON s.artist_id = a.id WHERE s.id = ?"
+    test = (n, )
+    c.execute(song_join, test)
+    return c.fetchone()
+
+
+def update_number_likes(song_number):
+    # get the number of likes
+    num_likes_select = "SELECT num_likes FROM songs WHERE id=?"
+    test = (song_number, )
+    c.execute(num_likes_select, test)
+    row = c.fetchone()
+    num_likes = row['num_likes']
+    # update the number of likes
+    update_likes = "UPDATE songs SET num_likes = ? WHERE id = ?"
+    test = (num_likes + 1, song_number)
+    c.execute(update_likes, test)
+    conn.commit()

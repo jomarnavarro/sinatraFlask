@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Songs
+{% endblock %}
+
+{% block main %}
+    <div class="col-12 text-center-mt-5">
+        <h1 class="text-dark pt04">Songs</h1>
+        <div class="border-top border-primary w50 mx-auto my3"></div>
+    </div>
+
+    {% if session.user_id %}
+        <a href="/songs/new"></a>
+    {% endif %}
+
+    <!-- //create song cards -->
+    <div class="container marketing" id="song_list">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <ul style="list-style-type: none;">
+                    {% for song in songs %}
+                        <li class="">
+                            <div class="card mt-5">
+                                
+                                <img src="{{ song['img_url'] }}" alt="" class="card-img-top w-50 mx-auto">
+                                <p class="my-4 text-center">
+                                    <a href="/songs/{{ song['id'] }}">{{ song['title'] }}</a>
+                                </p>
+                                <p class="my4 text-center">{{ song['name'] }}</p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+
+    
+{% endblock %}

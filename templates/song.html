@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Song Information
+{% endblock %}
+
+{% block main %}
+    <div class="col-12 text-center mt-5">
+        <h1 class="text-dark pt04">Song Information</h1>
+        <div class="border-top border-primary w50 mx-auto my3"></div>
+    </div>
+
+    <!-- //create song card -->
+    <div class="container marketing" id="song_card">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <img src="{{ song_info['img_url'] }}" alt="" class="card-img-top w-50 mx-auto">
+                        <h1 class="card-title">{{ song_info['title'] }}</h1>
+                        <p class="card-text">Length: {{ song_info['duration'] }} seconds.</p>
+                        <p class="card-text">Lyrics: {{ song_info['lyrics'] }}</p>
+                        <p class="card-text">
+                            {% if song_info['num_likes'] == 0 %}
+                                This song has no likes.
+                            {% elif song_info['num_likes'] == 1 %}
+                                This song has been liked once.
+                            {% elif song_info['num_likes'] == 2 %}
+                                This song has been liked twice.
+                            {% else %}
+                                This song has been liked {{ song_info['num_likes'] }} times.
+                            {% endif%}
+                        </p>
+                        <a href="/like/{{ song_info['id'] }}">
+                            <span class="glyphicon glyphicon-thumbs-up">Like</span>
+                        </a>
+                        <br>
+                        <a href="/songs">Back to Songs</a>
+                        <br>
+                        {% if session.user_id %}
+                        <a href="/songs/{{song_info['id']}}/edit">Edit this song</a>
+                        <br>
+                        <a href="/songs/{{song_info['id']}}/delete">Delete this song</a>
+                        <br>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    
+{% endblock %}

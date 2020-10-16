@@ -147,6 +147,28 @@ def contact():
         return redirect('/')
 
 
+@app.route('/songs')
+def list_songs():
+    # get all songs from the database
+    rows = db_helpers.fetch_songs()
+    return render_template('songs.html', songs=rows)
+
+
+@app.route('/songs/<int:song_number>')
+def list_song_number(song_number):
+    # get all songs from the database
+    row = db_helpers.fetch_song_info(song_number)
+    if not row:
+        return apology(f"Song {song_number} does not exist", 404)
+    
+    return render_template('song.html', song_info=row)
+
+
+@app.route("/like/<int:song_number>")
+def like_song(song_number):
+    # update number of likes
+    db_helpers.update_number_likes(song_number)
+    return redirect(f"/songs/{song_number}")
 
 def errorhandler(e):
     """Handle error"""
