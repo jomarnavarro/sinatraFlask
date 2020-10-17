@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <div id="main">
+        <div class="col-12 text-center mt-5">   
+            <h1 class="text-dark pt04">Welcome to the Internet Song Data Base</h1>
+            <div class="border-top border-primary w-50 mx-auto my3"></div>
+        </div>
+
+        <div class="container marketing">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card mt-5">
+                        <img src="static/img/sinatra.jpg" alt="" class="card-img-top mx-auto">
+                        <p class="my-4 text-center">
+                            The ISDB is a small project based on <a href="http://songs-by-sinatra.herokuapp.com/">Songs By Sinatra</a>, "(a) ... website all about the songs of the great Frank Sinatra".  It builds open it to include other artists as well.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

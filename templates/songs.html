@@ -5,13 +5,16 @@
 {% endblock %}
 
 {% block main %}
-    <div class="col-12 text-center-mt-5">
+    <div class="col-12 text-center mt-5">
         <h1 class="text-dark pt04">Songs</h1>
         <div class="border-top border-primary w50 mx-auto my3"></div>
     </div>
 
     {% if session.user_id %}
-        <a href="/songs/new"></a>
+    <div class="col-12 text-center mt-5">
+        <a href="/songs/new">Create a new Song</a>
+    </div>
+        
     {% endif %}
 
     <!-- //create song cards -->
