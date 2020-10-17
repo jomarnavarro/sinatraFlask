@@ -114,3 +114,17 @@ def get_song_id(title, duration, artist_id, lyrics):
         return row['id'], False
     else:
         return row['id'], True
+
+
+def update_song_info(song_number, artist_id, duration, lyrics):
+    update_song = "UPDATE songs SET artist_id = ?, duration = ?, lyrics = ? WHERE id = ?"
+    test = (artist_id, duration, lyrics, song_number)
+    c.execute(update_song, test)
+    conn.commit()
+
+
+def delete_song(song_number):
+    delete_song = "DELETE FROM songs WHERE id = ?"
+    test = (song_number, )
+    c.execute(delete_song, test)
+    conn.commit()

@@ -91,8 +91,6 @@ def logout():
     user_id = session["user_id"]
 
     user_name = db_helpers.get_username_by_id(user_id)[0]['username']
-    print(user_name)
-    
 
     # Forget any user_id
     session.clear()
@@ -176,7 +174,7 @@ def list_song_number(song_number):
     if not row:
         flash(f"Song {song_number} does not exist.")
         return render_template("songs.html")
-    
+
     return render_template('song.html', song_info=row)
 
 
@@ -200,7 +198,7 @@ def create_song():
         title = request.form.get("title")
         duration = request.form.get("duration")
         lyrics = request.form.get("lyrics")
-        
+
         if not artist:
             messages.append("Your song has no artist name")
         if not country:
@@ -215,25 +213,69 @@ def create_song():
             lyrics = ''
             messages.append("Your song has no lyrics")
 
-        if not artist and not title and not country:
+        if not artist or not title or not country:
             for msg in messages:
                 flash(msg)
             return render_template("song_form.html")
-        print(f"before getting artist_id, title is {title}")
+
         # get the artist id, whether it exists or is inserted on the spot.
         artist_id = db_helpers.get_artist_id(artist, country)
-        print(f"after getting artist_id, title is {title}")
-        print(artist_id)
+
         # get the song_id, whether it exists already or is added
-        
         song_id, existed = db_helpers.get_song_id(title, duration, artist_id, lyrics)
-        print(song_id)
+
         if existed:
             flash(f"Song {title} already existed in the DB.  Pls edit it.")
         # insert song into database
         # get song id
         # redirect user to /song/id
         return redirect(f"/songs/{song_id}")
+
+
+@app.route("/songs/<int:song_number>/edit", methods=["GET", "POST"])
+def edit_song(song_number):
+
+    if request.method == "GET":
+        song_info = db_helpers.fetch_song_info(song_number)
+        return render_template("song_edit.html", song_info=song_info)
+    else:
+        # fetch form data
+        messages = []
+        artist = request.form.get("artist")
+        nationality = request.form.get("country")
+        duration = request.form.get("duration")
+        lyrics = request.form.get("lyrics")
+
+        if not artist:
+            messages.append("Your song has no artist name")
+        if not nationality:
+            country = ''
+            messages.append("Your song has no country for artist")
+        if not duration:
+            duration = 0
+            messages.append("Your song has no duration time")
+        if not lyrics:
+            lyrics = ''
+            messages.append("Your song has no lyrics")
+
+        if not artist or not nationality:
+            for msg in messages:
+                flash(msg)
+            return render_template("song_form.html")
+
+        # get the artist id, whether it exists or is inserted on the spot.
+        artist_id = db_helpers.get_artist_id(artist, nationality)
+        # update the song
+        db_helpers.update_song_info(song_number, artist_id, duration, lyrics)
+        flash("Song updated")
+        return redirect(f"/songs/{song_number}")
+
+
+@app.route("/songs/<int:song_number>")
+def delete_song(song_number):
+    db_helpers.delete_song(song_number)
+    flash("Song deleted.")
+    return redirect("/songs")
 
 
 def errorhandler(e):
