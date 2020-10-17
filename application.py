@@ -134,6 +134,42 @@ def register():
         return render_template("login.html")
 
 
+@app.route("/register-admin", methods=["GET", "POST"])
+def register_admin():
+    """Register user via admin menu"""
+    if request.method == "GET":
+        return render_template("register_admin.html")
+    else:
+        username = request.form.get('username')
+        password = request.form.get('password')
+        repeat_password = request.form.get('repeat_password')
+        user_type = request.form.get('user_type')
+        messages = []
+        if not username:
+            messages.append("Error - You must enter a username")
+        if not password or not repeat_password:
+            messages.append("Error - You must enter a password that matches")
+        if password != repeat_password:
+            messages.append('Passwords do not match.')
+        if not user_type:
+            messages.append("You must select a user type")
+        if not username or not password or password != repeat_password or not user_type:
+            for msg in messages:
+                flash(msg)
+            return render_template("/register-admin")
+
+        rows = db_helpers.query_username(username)
+
+        if len(rows) != 0:
+            flash(f"User '{username}' is already taken")
+            return render_template("register.html")
+
+        db_helpers.insert_user(username, generate_password_hash(password), user_type)
+        flash(f"{username} was succesfully registered.")
+        return render_template("register_admin.html")
+
+
+
 @app.route("/about")
 def about():
     return render_template('about.html')
